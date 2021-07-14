@@ -9,7 +9,7 @@ export async function syncUserData() {
 
   return axios({
     method: "POST",
-    url: `${process.env.REACT_APP_API_BASE_URL}/sign-in`,
+    url: `${process.env.REACT_APP_API_BASE_URL}/account/sign-in`,
     headers: {
       Authorization: `Bearer ${userToken}`,
     },

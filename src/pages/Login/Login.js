@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useContext } from "react";
 import { Form, Button, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import withLayout from "../../hoc/withLayout";
 import { syncUserData } from "../../utils/auth-request";
@@ -17,8 +17,9 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  async function handleLoginWithGoogleClick(e) {
+  async function handleLoginWithGoogle(e) {
     e.preventDefault();
 
     setLoading(true);
@@ -26,8 +27,10 @@ function Login() {
     try {
       await signInWithGoogle();
       await syncUserData();
+      setLoggedIn(true);
     } catch (error) {
       setLoginError(error.message);
+      setLoggedIn(false);
     } finally {
       setLoading(false);
     }
@@ -47,6 +50,10 @@ function Login() {
     }
   }
 
+  if (loggedIn) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <>
       <Card id="loginContainer" className="flex-column p-1">
@@ -54,7 +61,7 @@ function Login() {
           Login
         </Card.Title>
         <Card.Body>
-          <Form className="">
+          <Form className="" onClick={handleSubmit}>
             <Form.Group controlId="email">
               <Form.Label className="form-label">Email</Form.Label>
               <Form.Control type="email" placeholder="Enter email" />
@@ -63,12 +70,17 @@ function Login() {
               <Form.Label className="form-label">Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
+            {loginError && (
+              <p className="mt-2 form-label text-danger">{loginError}</p>
+            )}
             <Button className="w-100 mt-2" variant="success" type="submit">
               Submit
             </Button>
           </Form>
           <div className="d-flex flex-column mt-4">
-            <Button variant="primary mb-1">Login with Google</Button>
+            <Button variant="primary mb-1" onClick={handleLoginWithGoogle}>
+              Login with Google
+            </Button>
             <Button variant="danger">Forgot your password</Button>
           </div>
         </Card.Body>

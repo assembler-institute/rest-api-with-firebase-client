@@ -36,11 +36,11 @@ function App() {
       <AuthContext.Provider value={currentUser}>
         <Switch>
           <Route
-            path="/home"
+            path="/login"
             exact
-            render={(routeProps) => <Home {...routeProps} />}
+            render={(routeProps) => <Login {...routeProps} />}
           />
-          <Route path="/" render={(routeProps) => <Login {...routeProps} />} />
+          <Route path="/" render={(routeProps) => <Home {...routeProps} />} />
         </Switch>
       </AuthContext.Provider>
     </div>
