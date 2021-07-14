@@ -1,0 +1,14 @@
+main {
+  height: 100vh;
+}
+
+#loginContainer {
+  min-width: 300px;
+  max-width: 450px;
+  border-radius: 8px;
+}
+
+.form-label {
+  width: 100%;
+  text-align: left;
+}
