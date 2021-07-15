@@ -23,6 +23,7 @@ function Login() {
     e.preventDefault();
 
     setLoading(true);
+    setLoggedIn(false);
 
     try {
       await signInWithGoogle();
@@ -30,7 +31,6 @@ function Login() {
       setLoggedIn(true);
     } catch (error) {
       setLoginError(error.message);
-      setLoggedIn(false);
     } finally {
       setLoading(false);
     }
@@ -38,11 +38,15 @@ function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    e.stopPropagation();
 
     setLoading(true);
+    setLoggedIn(false);
 
     try {
       await signInWithEmailAndPassword(email, password);
+      await syncUserData();
+      setLoggedIn(true);
     } catch (error) {
       setLoginError(error.message);
     } finally {
@@ -61,14 +65,27 @@ function Login() {
           Login
         </Card.Title>
         <Card.Body>
-          <Form className="" onClick={handleSubmit}>
+          <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="email">
               <Form.Label className="form-label">Email</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setEmail(e.target.value);
+                }}
+              />
             </Form.Group>
             <Form.Group className="mt-2" controlId="password">
               <Form.Label className="form-label">Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </Form.Group>
             {loginError && (
               <p className="mt-2 form-label text-danger">{loginError}</p>
@@ -81,7 +98,22 @@ function Login() {
             <Button variant="primary mb-1" onClick={handleLoginWithGoogle}>
               Login with Google
             </Button>
-            <Button variant="danger">Forgot your password</Button>
+            <div className="w-full d-flex">
+              <Link
+                className="btn btn-dark flex-grow-1 me-2"
+                variant="info"
+                to="/sign-up"
+              >
+                Sign Up
+              </Link>
+              <Link
+                className="btn btn-danger flex-grow-1"
+                variant="danger"
+                to="/reset-password"
+              >
+                Forgot your password
+              </Link>
+            </div>
           </div>
         </Card.Body>
       </Card>
