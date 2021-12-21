@@ -2,7 +2,7 @@
 import React, { useState, useContext } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import { Link, Redirect } from "react-router-dom";
-import AuthContext from "../../context/AuthContext";
+import { useAuth } from "../../context/auth";
 import withLayout from "../../hoc/withLayout";
 import { syncUserData } from "../../utils/auth-request";
 import {

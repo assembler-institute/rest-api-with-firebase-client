@@ -61,3 +61,15 @@ export function getCurrentUserEmail() {
 
   return auth.currentUser.email;
 }
+
+export function getCurrentUser() {
+  if (!auth.currentUser) {
+    return null;
+  }
+
+  return {
+    email: auth.currentUser.email,
+    name: auth.currentUser.displayName,
+    firebaseId: auth.currentUser.uid,
+  };
+}

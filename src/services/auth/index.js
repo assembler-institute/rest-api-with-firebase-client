@@ -8,4 +8,5 @@ export {
   signOut,
   getCurrentUserToken,
   getCurrentUserEmail,
+  getCurrentUser,
 } from "./auth";

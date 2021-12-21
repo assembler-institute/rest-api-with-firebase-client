@@ -2,7 +2,7 @@
 import React, { useState, useContext } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import { Link, Redirect } from "react-router-dom";
-import AuthContext from "../../context/AuthContext";
+import { useAuth } from "../../context/auth";
 import withLayout from "../../hoc/withLayout";
 import { syncUserData } from "../../utils/auth-request";
 import {
@@ -15,46 +15,22 @@ import "./Login.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [loginError, setLoginError] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+
+  const { state, loginWithGoogle, loginWithEmail  } = useAuth();
+  const { currentUser, isSigningIn, signInError} = state;
 
   async function handleLoginWithGoogle(e) {
     e.preventDefault();
-
-    setLoading(true);
-    setLoggedIn(false);
-
-    try {
-      await signInWithGoogle();
-      await syncUserData();
-      setLoggedIn(true);
-    } catch (error) {
-      setLoginError(error.message);
-    } finally {
-      setLoading(false);
-    }
+    loginWithGoogle();
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
-
-    setLoading(true);
-    setLoggedIn(false);
-
-    try {
-      await signInWithEmailAndPassword(email, password);
-      await syncUserData();
-      setLoggedIn(true);
-    } catch (error) {
-      setLoginError(error.message);
-    } finally {
-      setLoading(false);
-    }
+    loginWithEmail({ email: email , password: password });
   }
 
-  if (loggedIn) {
+  if (currentUser) {
     return <Redirect to="/" />;
   }
 
@@ -87,8 +63,8 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
-            {loginError && (
-              <p className="mt-2 form-label text-danger">{loginError}</p>
+            {signInError && (
+              <p className="mt-2 form-label text-danger">{signInError}</p>
             )}
             <Button className="w-100 mt-2" variant="success" type="submit">
               Submit

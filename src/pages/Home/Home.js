@@ -3,15 +3,13 @@ import React, { useEffect, useState, useContext } from "react";
 import "./Home.css";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import AuthContext from "../../context/AuthContext";
+import { useAuth } from "../../context/auth";
 import withLayout from "../../hoc/withLayout";
 import { signOut } from "../../services/auth";
 
 function Home() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const currentUser = useContext(AuthContext);
+  const { state: { currentUser, isSigningIn, signInError} } = useAuth();
 
   async function handleSignOut() {
     await signOut();

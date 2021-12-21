@@ -1,9 +1,9 @@
 import axios from "axios";
-import { getCurrentUserToken } from "../services/auth";
+import { getCurrentUserToken, getCurrentUser } from "../services/auth";
 
 export async function syncUserData() {
   const userToken = await getCurrentUserToken();
-
+  const user = await getCurrentUser();
   // process.env.REACT_APP_API_BASE_URL
   // http://localhost:4000
 
@@ -13,5 +13,6 @@ export async function syncUserData() {
     headers: {
       Authorization: `Bearer ${userToken}`,
     },
+    data: user
   });
 }

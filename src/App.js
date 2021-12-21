@@ -9,8 +9,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 
-import AuthContext from "./context/AuthContext";
 import { auth } from "./services/auth";
+import { AuthProvider } from "./context/auth";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     let unsubscribeFromAuth = null;
 
-    unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
+    /* unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
       if (user) {
         setCurrentUser(user);
       } else {
@@ -30,12 +30,12 @@ function App() {
       if (unsubscribeFromAuth) {
         unsubscribeFromAuth();
       }
-    };
+    }; */
   }, [currentUser]);
 
   return (
     <div className="App">
-      <AuthContext.Provider value={currentUser}>
+      <AuthProvider>
         <Switch>
           <Route
             path="/login"
@@ -54,7 +54,7 @@ function App() {
           />
           <Route path="/" render={(routeProps) => <Home {...routeProps} />} />
         </Switch>
-      </AuthContext.Provider>
+      </AuthProvider>
     </div>
   );
 }
